@@ -3,7 +3,6 @@ A desktop app for Gbatemp built with Electron
 
 ## Installation:
 
-- Linux:
-  - Download lastest release
-  - Unzip everything somewhere in your system (```/usr/share/gbatemp/``` is recommended)
-  - Run the ```gbatemp``` file inside.
+1. Download [lastest release](https://github.com/m1guelpf/gbatemp-desktop/releases/lastest).
+2. Unzip it
+3. Run it!
