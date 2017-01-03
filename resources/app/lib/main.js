@@ -278,7 +278,6 @@
 	
 	  // Get the URL of the source map
 	  fileData = retrieveFile(source);
-	  //        //# sourceMappingURL=foo.js.map                       /*# sourceMappingURL=foo.js.map */
 	  var re = /(?:\/\/[@#][ \t]+sourceMappingURL=([^\s'"]+?)[ \t]*$)|(?:\/\*[@#][ \t]+sourceMappingURL=([^\*]+?)[ \t]*(?:\*\/)[ \t]*$)/mg;
 	  // Keep executing the search to find the *last* sourceMappingURL to avoid
 	  // picking up sourceMappingURLs from comments, strings, etc.
@@ -5829,6 +5828,13 @@
 	            accelerator: 'CmdOrCtrl+C',
 	            role: 'copy'
 	        }, {
+	            label: 'Copy Current URL',
+	            accelerator: 'CmdOrCtrl+L',
+	            click: function click() {
+	                var currentURL = getCurrentUrl();
+	                _electron.clipboard.writeText(currentURL);
+	            }
+	        }, {
 	            label: 'Paste',
 	            accelerator: 'CmdOrCtrl+V',
 	            role: 'paste'
@@ -5836,6 +5842,11 @@
 	            label: 'Select All',
 	            accelerator: 'CmdOrCtrl+A',
 	            role: 'selectall'
+	        }, {
+	            label: 'Clear App Data',
+	            click: function click() {
+	                clearAppData();
+	            }
 	        }]
 	    }, {
 	        label: 'View',
@@ -5896,6 +5907,19 @@
 	            click: function click() {
 	                zoomOut();
 	            }
+	        }, {
+	            label: 'Toggle Developer Tools',
+	            accelerator: function () {
+	                if (process.platform === 'darwin') {
+	                    return 'Alt+Command+I';
+	                }
+	                return 'Ctrl+Shift+I';
+	            }(),
+	            click: function click(item, focusedWindow) {
+	                if (focusedWindow) {
+	                    focusedWindow.toggleDevTools();
+	                }
+	            }
 	        }]
 	    }, {
 	        label: 'Window',
@@ -5915,10 +5939,16 @@
 	        submenu: [{
 	            label: 'Report an Issue',
 	            click: function click() {
-	                _electron.shell.openExternal('https://support.miguelpiedrafita.com/');
+	                _electron.shell.openExternal('https://github.com/m1guelpf/gbatemp-desktop/issues/new');
 	            }
 	        }]
 	    }];
+	
+	    if (disableDevTools) {
+	        // remove last item (dev tools) from menu > view
+	        var submenu = template[1].submenu;
+	        submenu.splice(submenu.length - 1, 1);
+	    }
 	
 	    if (process.platform === 'darwin') {
 	        template.unshift({
